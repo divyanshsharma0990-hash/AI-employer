@@ -4,6 +4,10 @@ Manage several AIs (ChatGPT, Claude, Gemini, Grok, Llama on Groq, ...) as one te
 Everyone answers in a shared group chat, or a manager AI splits a task among the others.
 All chats are saved and can be reopened from the sidebar.
 
+Features: attach pictures, PDFs, Word files and text files in the chat; edit, test and remove employees;
+load each provider's real model list into a dropdown; automatic retries when a provider is busy;
+and "Web login" employees (you log in to the AI's website yourself, copy the prompt there, paste the reply back).
+
 ## Run locally
     python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
     pip install -r requirements.txt
