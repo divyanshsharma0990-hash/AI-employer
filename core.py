@@ -186,6 +186,12 @@ def del_conv(cid):
     q("DELETE FROM convs WHERE id=?", (cid,), write=True)
 
 
+def del_all_convs():
+    q("DELETE FROM files", write=True)
+    q("DELETE FROM msgs", write=True)
+    q("DELETE FROM convs", write=True)
+
+
 def get_msgs(cid):
     rows = q("SELECT id,sender,kind,content FROM msgs WHERE conv_id=? ORDER BY id", (cid,))
     for r in rows:
@@ -246,9 +252,15 @@ async def _ask(a, system, prompt, images=None):
                 + [{"type": "image_url", "image_url": {"url": f"data:{i['mime']};base64,{i['data']}"}} for i in images])
             body = {"model": a["model"], "messages": [{"role": "system", "content": system},
                                                        {"role": "user", "content": content}]}
-        async with httpx.AsyncClient(timeout=90) as h:
+        async with httpx.AsyncClient(timeout=120) as h:
             for attempt in range(3):
-                r = await h.post(url, headers=headers, json=body)
+                try:
+                    r = await h.post(url, headers=headers, json=body)
+                except httpx.TimeoutException:
+                    if attempt < 2:
+                        await asyncio.sleep(2 * (attempt + 1))
+                        continue
+                    raise
                 busy = r.status_code in (500, 502, 503, 504) or (
                     r.status_code == 429 and not re.search("credit|quota|insufficient", r.text, re.I))
                 if busy and attempt < 2:

@@ -37,3 +37,10 @@ Use a private repo. `.gitignore` already keeps the database and key file out of 
 
 Note: Community Cloud wipes local files when the app restarts, so saved chats and employees can disappear.
 For permanent history, move the database to a hosted one (Supabase, Neon, Turso).
+
+## One-click helper for web-login employees (optional)
+Install the Tampermonkey browser extension, choose Create a new script, paste the contents of
+`browser-helper/ai-employer-helper.user.js`, and save. On ChatGPT, Claude and Gemini you will see two buttons:
+- Paste prompt: fills the chat box from your clipboard (you press Send yourself).
+- Copy reply: copies the latest answer, ready to paste into AI Employer.
+Websites change their layout, so a button may need a new selector at the top of the script.

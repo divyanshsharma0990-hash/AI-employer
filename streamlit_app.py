@@ -58,10 +58,31 @@ with st.sidebar:
     if st.button("New chat", use_container_width=True, type="primary"):
         st.session_state.cid = core.new_conv()
         st.rerun()
-    for c in core.list_convs():
-        if st.button(c["title"], key=f"c{c['id']}", use_container_width=True):
+    convs = core.list_convs()
+    for c in convs:
+        left, right = st.columns([5, 1])
+        if left.button(c["title"], key=f"c{c['id']}", use_container_width=True):
             st.session_state.cid = c["id"]
             st.rerun()
+        if right.button("🗑", key=f"x{c['id']}", help="Delete this chat"):
+            core.del_conv(c["id"])
+            if st.session_state.get("cid") == c["id"]:
+                st.session_state.cid = None
+            st.rerun()
+    if st.session_state.get("confirm_all"):
+        st.warning("Delete ALL chat history?")
+        y, n = st.columns(2)
+        if y.button("Yes, delete all", key="yes_all"):
+            core.del_all_convs()
+            st.session_state.cid = None
+            st.session_state.confirm_all = False
+            st.rerun()
+        if n.button("Cancel", key="no_all"):
+            st.session_state.confirm_all = False
+            st.rerun()
+    elif convs and st.button("Delete all chats", key="del_all", use_container_width=True):
+        st.session_state.confirm_all = True
+        st.rerun()
 
     st.subheader("Your AI team")
     for a in agents:
