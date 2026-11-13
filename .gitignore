@@ -1,0 +1,5 @@
+ai_employer.db
+.secret.key
+.streamlit/secrets.toml
+__pycache__/
+.venv/
